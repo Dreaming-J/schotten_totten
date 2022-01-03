@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CardManager : MonoBehaviour
 {
@@ -9,6 +11,8 @@ public class CardManager : MonoBehaviour
 
     [SerializeField] ItemSO itemSO;
     [SerializeField] GameObject cardPrefab;
+    [SerializeField] GameObject myplayer;
+    [SerializeField] GameObject otherplayer;
     [SerializeField] List<Card> myCards;
     [SerializeField] List<Card> otherCards;
     [SerializeField] Transform cardSpawnPoint;
@@ -16,8 +20,13 @@ public class CardManager : MonoBehaviour
     [SerializeField] Transform myCardRight;
     [SerializeField] Transform otherCardLeft;
     [SerializeField] Transform otherCardRight;
+    [SerializeField] ECardState eCardState;
 
     List<Item> itemBuffer;
+    Card selectCard;
+    bool isMyCardDrag;
+    bool onMyCardArea;
+    enum ECardState { Nothing, CanMouseOver, CanMouseDrag }
 
     public Item PopItem()
     {
@@ -51,19 +60,27 @@ public class CardManager : MonoBehaviour
     void Start()
     {
         SetupItemBuffer();
+        TurnManager.onAddCard += AddCard;
+    }
+
+    private void OnDestroy()
+    {
+        TurnManager.onAddCard -= AddCard;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Keypad1))
-            AddCard(true);
-        if (Input.GetKeyDown(KeyCode.Keypad2))
-            AddCard(false);
+        if (isMyCardDrag)
+            CardDrag();
+
+        DetectCardArea();
+        SetECardState();
     }
 
     void AddCard(bool isMine)
     {
         var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, Utils.QI);
+        cardObject.transform.parent = (isMine ? myplayer : otherplayer).transform;
         var card = cardObject.GetComponent<Card>();
         card.Setup(PopItem(), isMine);
         (isMine ? myCards : otherCards).Add(card);
@@ -141,4 +158,80 @@ public class CardManager : MonoBehaviour
         Color rgb = new Color(colors[i, 0] / 255f, colors[i, 1] / 255f, colors[i, 2] / 255f);
         return rgb;
     }
+
+
+
+    #region MyCard
+
+    public void CardMouseOver(Card card)
+    {
+        if (eCardState == ECardState.Nothing)
+            return;
+
+        selectCard = card;
+        EnlargeCard(true, card);
+    }
+
+    public void CardMouseExit(Card card)
+    {
+        EnlargeCard(false, card);
+    }
+
+    public void CardMouseDown()
+    {
+        if (eCardState != ECardState.CanMouseDrag)
+            return;
+        isMyCardDrag = true;
+    }
+
+    public void CardMouseUp()
+    {
+        isMyCardDrag = false;
+
+        if (eCardState != ECardState.CanMouseDrag)
+            return;
+    }
+
+    void CardDrag()
+    {
+        if (!onMyCardArea)
+        {
+            selectCard.MoveTransform(new PRS(Utils.MousePos, Utils.QI, selectCard.originPRS.scale), false);
+        }
+    }
+
+    void DetectCardArea()
+    {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(Utils.MousePos, Vector3.forward);
+        int layer = LayerMask.NameToLayer("MyCardArea");
+        onMyCardArea = Array.Exists(hits, x => x.collider.gameObject.layer == layer);
+    }
+
+    void EnlargeCard(bool isEnlarge, Card card)
+    {
+        if (isEnlarge)
+        {
+            Vector3 enlargePos = new Vector3(card.originPRS.pos.x, -4.8f, -10f);
+            card.MoveTransform(new PRS(enlargePos, Utils.QI, Vector3.one * 2.0f), false);
+        }
+        else
+            card.MoveTransform(card.originPRS, false);
+
+        card.GetComponent<Order>().SetMostFrontOrder(isEnlarge);
+    }
+
+    void SetECardState()
+    {
+        if (TurnManager.Inst.isLoading)
+            eCardState = ECardState.Nothing;
+
+        else if (!TurnManager.Inst.myTurn)
+            eCardState = ECardState.CanMouseOver;
+
+        else if (TurnManager.Inst.myTurn)
+            eCardState = ECardState.CanMouseDrag;
+    }
+
+
+    #endregion
 }
