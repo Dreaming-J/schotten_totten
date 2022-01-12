@@ -20,8 +20,8 @@ public class NotificationPanel : MonoBehaviour
     private void Start() => ScaleZero();
 
     [ContextMenu("ScaleOne")]
-    void ScaleOne() => transform.localScale = Vector3.one;
+    public void ScaleOne() => transform.localScale = Vector3.one;
 
     [ContextMenu("ScaleZero")]
-    void ScaleZero() => transform.localScale = Vector3.zero;
+    public void ScaleZero() => transform.localScale = Vector3.zero;
 }
