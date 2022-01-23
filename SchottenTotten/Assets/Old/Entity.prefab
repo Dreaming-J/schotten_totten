@@ -5441,7 +5441,6 @@ GameObject:
   - component: {fileID: 2434375531196247127}
   - component: {fileID: 4010765859349311951}
   - component: {fileID: -7928442001368412884}
-  - component: {fileID: 8608346575410499444}
   - component: {fileID: 995031751412187556}
   m_Layer: 0
   m_Name: Entity
@@ -5449,7 +5448,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2434375531196247127
 Transform:
   m_ObjectHideFlags: 0
@@ -5546,35 +5545,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3, y: 3.8125}
   m_EdgeRadius: 0
---- !u!114 &8608346575410499444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6397268962655268625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b9c73e47836fbd40a72e0d89b6b6bd0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item:
-    number: 
-    sprite: {fileID: 0}
-    color: {r: 0, g: 0, b: 0, a: 0}
-  entity: {fileID: 4010765859349311951}
-  character: {fileID: 2973445459188483709}
-  nameTMP: {fileID: 8233612224588888761}
-  attackTMP: {fileID: 8774410497323130623}
-  healthTMP: {fileID: 985635660535129535}
-  sleepParticle: {fileID: 5439752149338208274}
-  attack: 0
-  health: 0
-  isMine: 0
-  isDie: 0
-  isBossOrEmpty: 0
-  attackable: 0
-  originPos: {x: 0, y: 0, z: 0}
 --- !u!114 &995031751412187556
 MonoBehaviour:
   m_ObjectHideFlags: 0

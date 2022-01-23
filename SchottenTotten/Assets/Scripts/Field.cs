@@ -1,39 +1,30 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
-using DG.Tweening;
 
-public class Filed : MonoBehaviour
+public class Field : MonoBehaviour
 {
-    public static Filed Inst { get; private set; }
-    void Awake() => Inst = this;
+    [SerializeField] GameObject field;
+    [SerializeField] public List<FieldCard> fieldcards;
 
-    [SerializeField] GameObject myField;
-    [SerializeField] GameObject otherField;
+    public int child => field.transform.childCount;
+    public bool isFieldActive => child < 3;
+    public bool isMine => field.transform.name == "MyField";
 
-    bool onMyFieldArea;
-
-    private void Update()
+    public Vector3 SpawnPos()
     {
-        DetectFieldArea();
+        Vector3 spawnPos = field.transform.position;
+        if (child == 0)
+            spawnPos.y = isMine ? -5f : 5f;
+        else if (child == 1)
+            spawnPos.y = isMine ? -6.5f : 6.5f;
+        else if (child == 2)
+            spawnPos.y = isMine ? -8f : 8f;
+        return spawnPos;
     }
 
-    //void SetOriginOrder(bool isMine)
-    //{
-    //    int count = isMine ? myCards.Count : otherCards.Count;
-    //    for (int i = 0; i < count; i++)
-    //    {
-    //        var targetCard = isMine ? myCards[i] : otherCards[i];
-    //        targetCard?.GetComponent<Order>().SetOriginOrder(i);
-    //    }
-    //}
-
-    void DetectFieldArea()
+    public void CheckStone()
     {
-        RaycastHit2D[] hits = Physics2D.RaycastAll(Utils.MousePos, Vector3.forward);
-        int layer = LayerMask.NameToLayer("MyFieldArea");
-        onMyFieldArea = Array.Exists(hits, x => x.collider.gameObject.layer == layer);
+        //카드 6장이 놓일 경우 카드의 주인 결정하는 코드
     }
 }

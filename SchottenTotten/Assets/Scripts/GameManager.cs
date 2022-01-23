@@ -54,10 +54,7 @@ public class GameManager : MonoBehaviour
             CardManager.Inst.TryPutCard(false);
 
         if (Input.GetKeyDown(KeyCode.Keypad5))
-            EntityManager.Inst.DamageBoss(true, 19);
-
-        if (Input.GetKeyDown(KeyCode.Keypad6))
-            EntityManager.Inst.DamageBoss(false, 19);
+            CardManager.Inst.myPutCount = 0;
     }
 
     public void StartGame()

@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 136148441004481319}
   - component: {fileID: 136148441004481318}
   - component: {fileID: -5118589147706127412}
-  - component: {fileID: 210381667738785537}
+  - component: {fileID: 2501183468205247242}
   - component: {fileID: 136148441004481313}
-  - component: {fileID: 181240926539713751}
+  - component: {fileID: 5785741283376661149}
   m_Layer: 0
-  m_Name: Card
+  m_Name: FieldCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,7 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   color: {r: 0, g: 0, b: 0, a: 1}
   outlineSize: 3
---- !u!114 &210381667738785537
+--- !u!114 &2501183468205247242
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,26 +114,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 136148441004481312}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22091699cb2949c46ad5be98213b0a7f, type: 3}
+  m_Script: {fileID: 11500000, guid: 52244b7340d3f7643a1b24b424b1615a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  card: {fileID: 136148441004481318}
+  fieldcard: {fileID: 136148441004481312}
   character: {fileID: 136148441120585899}
   LT_NumberTMP: {fileID: 5815189808151712215}
   RT_NumberTMP: {fileID: 136148441050622471}
   LB_NumberTMP: {fileID: 2578222432199073390}
   RB_NumberTMP: {fileID: 2015796665254976435}
-  cardFront: {fileID: 21300000, guid: 32461e965fcd5db4d92aeed2a6a0cf68, type: 3}
-  cardBack: {fileID: 21300000, guid: 6cb022ac7a8898c4fb048959536d4e7b, type: 3}
   item:
     number: 
     sprite: {fileID: 0}
     color: {r: 0, g: 0, b: 0, a: 0}
-  isField: 0
-  originPRS:
-    pos: {x: 0, y: 0, z: 0}
-    rot: {x: 0, y: 0, z: 0, w: 0}
-    scale: {x: 0, y: 0, z: 0}
 --- !u!114 &136148441004481313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,9 +147,9 @@ MonoBehaviour:
   - {fileID: 136148441050622470}
   - {fileID: 3799033576325319158}
   - {fileID: 1156778690321550114}
-  sortingLayerName: Card
---- !u!60 &181240926539713751
-PolygonCollider2D:
+  sortingLayerName: Field
+--- !u!61 &5785741283376661149
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -168,7 +161,7 @@ PolygonCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.0117993355, y: 2.5507941}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -178,21 +171,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 2.3814814, y: 3.2518518}
-      - {x: 2.3222222, y: 3.311111}
-      - {x: -2.3592591, y: 3.311111}
-      - {x: -2.3592591, y: -3.2592592}
-      - {x: -2.2555556, y: -3.3555555}
-      - {x: -2.0035605, y: -3.3555555}
-      - {x: -1.1438646, y: -4.1762934}
-      - {x: 1.2392302, y: -4.169658}
-      - {x: 2.000781, y: -3.3555555}
-      - {x: 2.2703702, y: -3.3555555}
-      - {x: 2.3962963, y: -3.311111}
-      - {x: 2.4037037, y: -3.2592592}
-      - {x: 2.4037037, y: 3.1259258}
+  serializedVersion: 2
+  m_Size: {x: 5.349431, y: 1.480834}
+  m_EdgeRadius: 0
 --- !u!1 &136148441050622465
 GameObject:
   m_ObjectHideFlags: 0

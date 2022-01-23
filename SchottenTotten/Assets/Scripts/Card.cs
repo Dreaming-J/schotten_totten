@@ -17,6 +17,7 @@ public class Card : MonoBehaviour
 
     public Item item;
     bool isFront;
+    public bool isField;
     public PRS originPRS;
 
     public void Setup(Item item, bool isFront)

@@ -26,4 +26,16 @@ public class EndTurnBtn : MonoBehaviour
         GetComponent<Button>().interactable = isActive;
         btnText.color = isActive ? new Color32(255, 195, 90, 255) : new Color32(55, 55, 55, 255);
     }
+
+    public void EndTurnCondition()
+    {
+        if (CardManager.Inst.myPutCount == 1)
+        {
+            Setup(false);
+        }
+        else
+        {
+            Debug.Log("카드를 1장 내주세요.");
+        }
+    }
 }

@@ -26,12 +26,15 @@ public class CardManager : MonoBehaviour
 
     List<Item> itemBuffer;
     Card selectCard;
+    Field targetField;
     bool isMyCardDrag;
     bool onMyCardArea;
     enum ECardState { Nothing, CanMouseOver, CanMouseDrag }
-    int myPutCount;
+    public int myPutCount;
+    byte[,] colors = new byte[6, 3] { { 160, 204, 98 }, { 77, 202, 245 }, { 240, 99, 88 }, { 244, 204, 121 }, { 168, 110, 171 }, { 172, 132, 120 } };
+    string[] colorsname = new string[6] { "green", "blue", "red", "yellow", "purple", "brown" };
 
-    public Item PopItem()
+    public Item PopItem() // µ¶ ¥ŸªÃ¿∏∏È µ¶ ¥ŸΩ√ ∏Æ« µ 
     {
         if (itemBuffer.Count == 0)
             SetupItemBuffer();
@@ -47,7 +50,8 @@ public class CardManager : MonoBehaviour
         for (int i = 0; i < itemSO.items.Length; i++)
         {
             Item item = itemSO.items[i];
-            item.color = CreateColor(i);
+            item.colorname = colorsname[i % 6];
+            item.color = new Color32(colors[i % 6,0], colors[i % 6, 1], colors[i % 6, 2], 255);
             itemBuffer.Add(item);
         }
 
@@ -171,10 +175,9 @@ public class CardManager : MonoBehaviour
             return false;
 
         Card card = isMine ? selectCard : otherCards[Random.Range(0, otherCards.Count)];
-        var spawnPos = isMine ? Utils.MousePos : otherCardSpawnPoint.position;
         var targetCards = isMine ? myCards : otherCards;
 
-        if (EntityManager.Inst.SpawnEntity(isMine, card.item, spawnPos))
+        if (FieldManager.Inst.SpawnCard(isMine, card))
         {
             targetCards.Remove(card);
             card.transform.DOKill();
@@ -193,14 +196,6 @@ public class CardManager : MonoBehaviour
             CardAlignment(isMine);
             return false;
         }
-    }
-
-    public Color CreateColor(int idx)
-    {
-        int i = idx % 6;
-        float[,] colors = new float[6, 3] { { 160f, 204f, 98f }, { 77f, 202f, 245f }, { 240f, 99f, 88f }, { 244f, 204f, 121f }, { 168f, 110f, 171f }, { 172f, 132f, 120f } };
-        Color rgb = new Color(colors[i, 0] / 255f, colors[i, 1] / 255f, colors[i, 2] / 255f);
-        return rgb;
     }
 
 
@@ -235,9 +230,7 @@ public class CardManager : MonoBehaviour
         if (eCardState != ECardState.CanMouseDrag)
             return;
 
-        if (onMyCardArea)
-            EntityManager.Inst.RemoveMyEmptyEntity();
-        else
+        if (!onMyCardArea)
             TryPutCard(true);
     }
 
@@ -249,7 +242,6 @@ public class CardManager : MonoBehaviour
         if (!onMyCardArea)
         {
             selectCard.MoveTransform(new PRS(Utils.MousePos, Utils.QI, selectCard.originPRS.scale), false);
-            EntityManager.Inst.InsertMyEmptyEntity(Utils.MousePos.x);
         }
     }
 
@@ -264,8 +256,8 @@ public class CardManager : MonoBehaviour
     {
         if (isEnlarge)
         {
-            Vector3 enlargePos = new Vector3(card.originPRS.pos.x, -4.8f, -10f);
-            card.MoveTransform(new PRS(enlargePos, Utils.QI, Vector3.one * 2.0f), false);
+            Vector3 enlargePos = new Vector3(card.originPRS.pos.x, -8f, -10f);
+            card.MoveTransform(new PRS(enlargePos, Utils.QI, Vector3.one * 1.5f), false);
         }
         else
             card.MoveTransform(card.originPRS, false);
@@ -278,7 +270,7 @@ public class CardManager : MonoBehaviour
         if (TurnManager.Inst.isLoading)
             eCardState = ECardState.Nothing;
 
-        else if (!TurnManager.Inst.myTurn || myPutCount == 1 || EntityManager.Inst.IsFullMyEntities)
+        else if (!TurnManager.Inst.myTurn || myPutCount == 1)
             eCardState = ECardState.CanMouseOver;
 
         else if (TurnManager.Inst.myTurn && myPutCount == 0)

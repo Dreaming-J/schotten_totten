@@ -6,7 +6,7 @@ public class Order : MonoBehaviour
 {
     [SerializeField] Renderer[] backRenderers;
     [SerializeField] Renderer[] middleRenderers;
-    [SerializeField] string sortingLayerName;
+    [SerializeField] public string sortingLayerName;
     int originOrder;
 
     public void SetOriginOrder(int originOrder)
