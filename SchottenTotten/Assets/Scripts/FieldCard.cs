@@ -28,8 +28,24 @@ public class FieldCard : MonoBehaviour
         RB_NumberTMP.text = this.item.number.ToString();
         RB_NumberTMP.color = this.item.color;
 
-        int order = transform.parent.GetComponent<Field>().child;
+        int order = transform.parent.GetComponent<Field>().child - 1; // 자식 컴포넌트가 추가된 후이므로
         GetComponent<Order>().SetOriginOrder(order);
+    }
+
+    public void MoveTransform(PRS prs, bool useDotween, float dotweenTime = 0)
+    {
+        if (useDotween)
+        {
+            transform.DOMove(prs.pos, dotweenTime);
+            transform.DORotateQuaternion(prs.rot, dotweenTime);
+            transform.DOScale(prs.scale, dotweenTime);
+        }
+        else
+        {
+            transform.position = prs.pos;
+            transform.rotation = prs.rot;
+            transform.localScale = prs.scale;
+        }
     }
 
     void OnMouseOver()

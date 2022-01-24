@@ -12,8 +12,8 @@ public class CardManager : MonoBehaviour
 
     [SerializeField] ItemSO itemSO;
     [SerializeField] GameObject cardPrefab;
-    [SerializeField] GameObject myHands;
-    [SerializeField] GameObject otherHands;
+    [SerializeField] GameObject myHand;
+    [SerializeField] GameObject otherHand;
     [SerializeField] List<Card> myCards;
     [SerializeField] List<Card> otherCards;
     [SerializeField] Transform cardSpawnPoint;
@@ -31,27 +31,20 @@ public class CardManager : MonoBehaviour
     bool onMyCardArea;
     enum ECardState { Nothing, CanMouseOver, CanMouseDrag }
     public int myPutCount;
-    byte[,] colors = new byte[6, 3] { { 160, 204, 98 }, { 77, 202, 245 }, { 240, 99, 88 }, { 244, 204, 121 }, { 168, 110, 171 }, { 172, 132, 120 } };
-    string[] colorsname = new string[6] { "green", "blue", "red", "yellow", "purple", "brown" };
 
     public Item PopItem() // µ¶ ¥ŸªÃ¿∏∏È µ¶ ¥ŸΩ√ ∏Æ« µ 
     {
-        if (itemBuffer.Count == 0)
-            SetupItemBuffer();
-
         Item item = itemBuffer[0];
         itemBuffer.RemoveAt(0);
         return item;
     }
 
-    void SetupItemBuffer()
+    public void SetupItemBuffer()
     {
         itemBuffer = new List<Item>(54);
         for (int i = 0; i < itemSO.items.Length; i++)
         {
             Item item = itemSO.items[i];
-            item.colorname = colorsname[i % 6];
-            item.color = new Color32(colors[i % 6,0], colors[i % 6, 1], colors[i % 6, 2], 255);
             itemBuffer.Add(item);
         }
 
@@ -94,8 +87,11 @@ public class CardManager : MonoBehaviour
 
     void AddCard(bool isMine)
     {
+        if (itemBuffer.Count == 0)
+            return;
+
         var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, Utils.QI);
-        cardObject.transform.parent = (isMine ? myHands : otherHands).transform;
+        cardObject.transform.parent = (isMine ? myHand : otherHand).transform;
         var card = cardObject.GetComponent<Card>();
         card.Setup(PopItem(), isMine);
         (isMine ? myCards : otherCards).Add(card);
@@ -176,6 +172,7 @@ public class CardManager : MonoBehaviour
 
         Card card = isMine ? selectCard : otherCards[Random.Range(0, otherCards.Count)];
         var targetCards = isMine ? myCards : otherCards;
+
 
         if (FieldManager.Inst.SpawnCard(isMine, card))
         {

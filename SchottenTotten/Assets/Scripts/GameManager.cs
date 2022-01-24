@@ -48,7 +48,11 @@ public class GameManager : MonoBehaviour
             TurnManager.OnAddCard?.Invoke(false);
 
         if (Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            if (CardManager.Inst.myPutCount == 0)
+                CardManager.Inst.myPutCount = 1;
             TurnManager.Inst.EndTurn();
+        }
 
         if (Input.GetKeyDown(KeyCode.Keypad4))
             CardManager.Inst.TryPutCard(false);
@@ -60,7 +64,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         StartCoroutine(TurnManager.Inst.StartGameCo());
-        StartCoroutine(FieldManager.Inst.SetTile());
+        StartCoroutine(TileManager.Inst.SetTile());
     }
 
     public void Notification(string message)

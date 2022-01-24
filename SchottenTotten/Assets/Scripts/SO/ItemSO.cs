@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Item
 {
-    public string number;
+    public int number;
     public Sprite sprite;
     public string colorname;
     public Color color;

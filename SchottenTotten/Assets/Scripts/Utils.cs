@@ -20,6 +20,7 @@ public class PRS //Position, Rotation, ScaleÀ» ´ã´Â class
 public class Utils
 {
     public static Quaternion QI => Quaternion.identity;
+    public static Quaternion Q180 => Quaternion.Euler(0, 0, 180.0f);
 
     public static Vector3 MousePos
     {

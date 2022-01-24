@@ -42,6 +42,8 @@ public class TurnManager : MonoBehaviour
                 myTurn = false;
                 break;
         }
+
+        CardManager.Inst.SetupItemBuffer();
     }
 
     public IEnumerator StartGameCo()
@@ -63,10 +65,13 @@ public class TurnManager : MonoBehaviour
     {
         isLoading = true;
         if (myTurn)
+        {
+            yield return delay07;
             GameManager.Inst.Notification("³ªÀÇ ÅÏ");
+        }
 
-        yield return delay07;
-        OnAddCard?.Invoke(myTurn);
+        //yield return delay07;
+        //OnAddCard?.Invoke(myTurn);
         yield return delay07;
         isLoading = false;
 
@@ -75,10 +80,10 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
-        if (CardManager.Inst.myPutCount == 1)
-        {
-            myTurn = !myTurn;
-            StartCoroutine(StartTurnCo());
-        }
+        if (myTurn && CardManager.Inst.myPutCount != 1)
+            return;
+        OnAddCard?.Invoke(myTurn);
+        myTurn = !myTurn;
+        StartCoroutine(StartTurnCo());
     }
 }
