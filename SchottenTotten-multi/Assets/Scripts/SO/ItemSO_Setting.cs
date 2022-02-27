@@ -25,4 +25,3 @@ public class ItemSO_Setting : MonoBehaviour
         }
     }
 }
-

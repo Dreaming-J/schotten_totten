@@ -19,9 +19,6 @@ public class TileManager : MonoBehaviour
 
     public List<GameObject> tiles;
 
-    WaitForSeconds delay01 = new WaitForSeconds(0.1f);
-    WaitForSeconds delay1 = new WaitForSeconds(1f);
-
     void CreateTile()
     {
         for (int i = 0; i < tilesprites.Count; i++)
@@ -42,13 +39,11 @@ public class TileManager : MonoBehaviour
         float interval = 1f / (objCount - 1);
         var targetRot = Utils.QI;
 
-        //int[] order = new int[9] { 0, 8, 1, 7, 2, 6, 3, 5, 4 };
         for (int i = 0; i < objCount; i++)
         {
-            //int i = order[j];
             objLerps[i] = interval * i;
             var targetPos = Vector3.Lerp(tileLeft.position, tileRight.position, objLerps[i]);
-            yield return delay01;
+            yield return Utils.delay(0.1f);
             MoveTransform(tiles[i], new PRS(targetPos, targetRot, Vector3.one), true, 0.7f);
         }
     }
@@ -108,9 +103,20 @@ public class TileManager : MonoBehaviour
             isGameOver = true;
         }
 
-        yield return delay1;
+        yield return Utils.delay(1f);
 
         if (isGameOver)
             StartCoroutine(GameManager.Inst.GameOver(isMyWin));
+    }
+
+    public static int TransTileName(int tilenum)
+    {
+        int cen = 4;
+        int interval = (cen - tilenum) > 0 ? (cen - tilenum) : (cen - tilenum) * -1;
+        if (tilenum < cen)
+            cen += interval;
+        else if (tilenum > cen)
+            cen -= interval;
+        return cen;
     }
 }

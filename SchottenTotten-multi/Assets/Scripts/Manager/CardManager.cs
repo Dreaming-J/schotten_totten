@@ -4,27 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using DG.Tweening;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class CardManager : MonoBehaviour
+public class CardManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     public static CardManager Inst { get; private set; }
     void Awake() => Inst = this;
 
-    [SerializeField] ItemSO itemSO;
-    [SerializeField] GameObject cardPrefab;
-    [SerializeField] GameObject myHand;
-    [SerializeField] GameObject otherHand;
-    [SerializeField] List<Card> myCards;
-    [SerializeField] List<Card> otherCards;
+    public ItemSO itemSO;
+    public GameObject myHand;
+    public GameObject otherHand;
+    public List<Card> myCards;
     [SerializeField] Transform cardSpawnPoint;
-    [SerializeField] Transform otherCardSpawnPoint;
     [SerializeField] Transform myCardLeft;
     [SerializeField] Transform myCardRight;
-    [SerializeField] Transform otherCardLeft;
-    [SerializeField] Transform otherCardRight;
     [SerializeField] ECardState eCardState;
 
-    List<Item> itemBuffer;
+    PhotonView PV;
+    public List<Item> itemBuffer = new List<Item>(54);
     Card selectCard;
     Field targetField;
     bool isMyCardDrag;
@@ -32,33 +30,75 @@ public class CardManager : MonoBehaviour
     enum ECardState { Nothing, CanMouseOver, CanMouseDrag }
     public int myPutCount;
 
-    public Item PopItem() // µ¶ ¥ŸªÃ¿∏∏È µ¶ ¥ŸΩ√ ∏Æ« µ 
+    #region µø±‚»≠ IPunObservable implementation
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting && Utils.isMaster)
+        {
+            //We own this player: send the others our data
+            //string jdata = JsonUtility.ToJson(new Serialization<Item>(itemBuffer));
+            //stream.SendNext(jdata);
+        }
+        else
+        {
+            //Network player, receive data
+            //string jdata = (string)stream.ReceiveNext();
+            //itemBuffer = JsonUtility.FromJson<Serialization<Item>>(jdata).target;
+        }
+    }
+    #endregion
+
+    public Item PopItem()
     {
         Item item = itemBuffer[0];
-        itemBuffer.RemoveAt(0);
+        PV.RPC(nameof(SyncPop), RpcTarget.AllBuffered);
         return item;
+    }
+    [PunRPC] void SyncPop()
+    {
+        itemBuffer.RemoveAt(0);
     }
 
     public void SetupItemBuffer()
     {
-        itemBuffer = new List<Item>(54);
-        for (int i = 0; i < itemSO.items.Length; i++)
+        if (Utils.isMaster)
         {
+            for (int i = 0; i < itemSO.items.Length; i++)
+            {
             Item item = itemSO.items[i];
             itemBuffer.Add(item);
+            }
+            for (int i = 0; i < itemBuffer.Count; i++)
+            {
+                int rand = Random.Range(i, itemBuffer.Count);
+                Item temp = itemBuffer[i];
+                itemBuffer[i] = itemBuffer[rand];
+                itemBuffer[rand] = temp;
+            }
+            string jdata = JsonUtility.ToJson(new Serialization<Item>(itemBuffer));
+            PV.RPC(nameof(UpdateItemBuffer), RpcTarget.OthersBuffered, jdata);
         }
-
+    }
+    [PunRPC] void UpdateItemBuffer(string jdata)
+    {
+        itemBuffer = JsonUtility.FromJson<Serialization<Item>>(jdata).target;
         for (int i = 0; i < itemBuffer.Count; i++)
         {
-            int rand = Random.Range(i, itemBuffer.Count);
-            Item temp = itemBuffer[i];
-            itemBuffer[i] = itemBuffer[rand];
-            itemBuffer[rand] = temp;
+            int num = (itemBuffer[i].number - 1) * 6;
+            for (int j = 0; j < 6; j++)
+            {
+                if (itemBuffer[i].colorname == itemSO.items[num + j].colorname)
+                {
+                    itemBuffer[i].sprite = itemSO.items[num + j].sprite;
+                    break;
+                }
+            }
         }
     }
 
     void Start()
     {
+        PV = GetComponent<PhotonView>();
         TurnManager.OnAddCard += AddCard;
         TurnManager.OnTurnStarted += OnTurnStarted;
     }
@@ -88,12 +128,11 @@ public class CardManager : MonoBehaviour
     {
         if (itemBuffer.Count == 0)
             return;
-
-        var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, Utils.QI);
-        cardObject.transform.parent = (isMine ? myHand : otherHand).transform;
+        var cardObject = PhotonNetwork.Instantiate("Card", cardSpawnPoint.position, Utils.QI, 0);
         var card = cardObject.GetComponent<Card>();
-        card.Setup(PopItem(), isMine);
-        (isMine ? myCards : otherCards).Add(card);
+        card.transform.parent = myHand.transform;
+        myCards.Add(card);
+        card.Setup(PopItem());
 
         SetOriginOrder(isMine);
         CardAlignment(isMine);
@@ -101,10 +140,10 @@ public class CardManager : MonoBehaviour
 
     void SetOriginOrder(bool isMine)
     {
-        int count = isMine ? myCards.Count : otherCards.Count;
+        int count = myCards.Count;
         for (int i = 0; i < count; i++)
         {
-            var targetCard = isMine ? myCards[i] : otherCards[i];
+            var targetCard = myCards[i];
             targetCard?.GetComponent<Order>().SetOriginOrder(i);
         }
     }
@@ -112,12 +151,9 @@ public class CardManager : MonoBehaviour
     void CardAlignment(bool isMine)
     {
         List<PRS> originCardPRSs = new List<PRS>();
-        if (isMine)
-            originCardPRSs = RoundAlignment(myCardLeft, myCardRight, myCards.Count, 0.5f, Vector3.one);
-        else
-            originCardPRSs = RoundAlignment(otherCardLeft, otherCardRight, otherCards.Count, -0.5f, Vector3.one);
+        originCardPRSs = RoundAlignment(myCardLeft, myCardRight, myCards.Count, 0.5f, Vector3.one);
 
-        var targetCards = isMine ? myCards : otherCards;
+        var targetCards = myCards;
         for (int i = 0; i < targetCards.Count; i++)
         {
             var targetCard = targetCards[i];
@@ -165,19 +201,15 @@ public class CardManager : MonoBehaviour
     {
         if (isMine && myPutCount >= 1)
             return false;
-
-        if (!isMine && otherCards.Count <= 0)
-            return false;
-
-        Card card = isMine ? selectCard : otherCards[Random.Range(0, otherCards.Count)];
-        var targetCards = isMine ? myCards : otherCards;
+        Card card = selectCard;
+        var targetCards = myCards;
 
 
         if (FieldManager.Inst.SpawnCard(isMine, card))
         {
             targetCards.Remove(card);
             card.transform.DOKill();
-            DestroyImmediate(card.gameObject);
+            PhotonNetwork.Destroy(card.gameObject);
             if (isMine)
             {
                 selectCard = null;
@@ -227,7 +259,8 @@ public class CardManager : MonoBehaviour
             return;
 
         if (!onMyCardArea)
-            TryPutCard(true);
+            if (TryPutCard(true))
+                TurnManager.Inst.EndTurn();
     }
 
     void CardDrag()

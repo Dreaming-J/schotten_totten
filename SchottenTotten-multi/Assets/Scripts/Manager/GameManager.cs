@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
 // 치트, UI, 랭킹, 게임오버
 public class GameManager : MonoBehaviour
@@ -12,15 +14,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] string cheatInfo;
     [SerializeField] NotificationPanel notificationPanel;
     [SerializeField] ResultPanel resultPanel;
-    [SerializeField] TitlePanel titlePanel;
     [SerializeField] CameraEffect cameraEffect;
-    [SerializeField] GameObject endTurnBtn;
-
-    WaitForSeconds delay2 = new WaitForSeconds(2);
+    [SerializeField] GameObject endTurnBtn; // 삭제 예정
 
     void Start()
     {
-        Screen.SetResolution((Screen.width*16)/9, Screen.width, true);
+        //Screen.SetResolution(960, 540, false);
+        Screen.SetResolution((Screen.width * 16) / 9, Screen.width, true);
         UISetup();
     }
 
@@ -28,9 +28,7 @@ public class GameManager : MonoBehaviour
     {
         notificationPanel.ScaleZero();
         resultPanel.ScaleZero();
-        titlePanel.Active(true);
         cameraEffect.SetGrayScale(false);
-
     }
 
     void Update()
@@ -40,7 +38,7 @@ public class GameManager : MonoBehaviour
 #endif
     }
 
-    void InputCheatKey()
+    void InputCheatKey() // 거의 안되는 기능
     {
         if (Input.GetKeyDown(KeyCode.Keypad1))
             TurnManager.OnAddCard?.Invoke(true);
@@ -77,7 +75,7 @@ public class GameManager : MonoBehaviour
     {
         TurnManager.Inst.isLoading = true;
         endTurnBtn.SetActive(false);
-        yield return delay2;
+        yield return Utils.delay(2f);
 
         TurnManager.Inst.isLoading = true;
         resultPanel.Show(isMyWin ? "승리" : "패배");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using Photon.Pun;
 
 public class Card : MonoBehaviour
 {
@@ -19,26 +20,39 @@ public class Card : MonoBehaviour
     bool isFront;
     public bool isField;
     public PRS originPRS;
+    public PhotonView PV;
 
-    public void Setup(Item item, bool isFront)
+    private void Start()
     {
-        this.item = item;
-        this.isFront = isFront;
+        PV = GetComponent<PhotonView>();
+        isFront = PV.IsMine;
+    }
 
-        if (this.isFront)
+    public void Setup(Item item)
+    {
+        string jdata = JsonUtility.ToJson(item);
+        PV.RPC(nameof(SetupRPC), RpcTarget.AllBufferedViaServer, jdata);
+    }
+    [PunRPC] public void SetupRPC(string jdata)
+    {
+        item = JsonUtility.FromJson<Item>(jdata);
+
+        if (isFront)
         {
-            character.sprite = this.item.sprite;
-            LT_NumberTMP.text = this.item.number.ToString();
-            LT_NumberTMP.color = this.item.color;
-            RT_NumberTMP.text = this.item.number.ToString();
-            RT_NumberTMP.color = this.item.color;
-            LB_NumberTMP.text = this.item.number.ToString();
-            LB_NumberTMP.color = this.item.color;
-            RB_NumberTMP.text = this.item.number.ToString();
-            RB_NumberTMP.color = this.item.color;
+            card.sprite = cardFront;
+            character.sprite = item.sprite;
+            LT_NumberTMP.text = item.number.ToString();
+            LT_NumberTMP.color = item.color;
+            RT_NumberTMP.text = item.number.ToString();
+            RT_NumberTMP.color = item.color;
+            LB_NumberTMP.text = item.number.ToString();
+            LB_NumberTMP.color = item.color;
+            RB_NumberTMP.text = item.number.ToString();
+            RB_NumberTMP.color = item.color;
         }
         else
         {
+            transform.parent = CardManager.Inst.otherHand.transform;
             card.sprite = cardBack;
             LT_NumberTMP.text = "";
             RT_NumberTMP.text = "";

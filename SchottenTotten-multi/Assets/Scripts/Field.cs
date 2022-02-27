@@ -8,31 +8,37 @@ public class Field : MonoBehaviour
     [SerializeField] Tile tile;
     [SerializeField] GameObject field;
     [SerializeField] List<FieldCard> fieldcards;
-    [SerializeField] public EFieldState eFieldState;
+    public EFieldState eFieldState;
 
     public enum EFieldState { StraightFlush = 0, Triple = 1, Flush = 2, Straight = 3, ThreeCards = 4, Nothing = 5 };
     public int maxNum;
 
     public int child => field.transform.childCount;
     public bool isFieldActive => child < 3;
-    public bool isMine => field.transform.name == "MyField";
+    public bool isMine => field.transform.name == "Field 0";
 
     float[] hard_offset = new float[2] { -6.7f, -7.45f };
     float[] hard_size = new float[2] { 7f, 5.5f };
     float[] hard_pos = new float[3] { -5f, -6.5f, -8f };
-
-    WaitForSeconds delay01 = new WaitForSeconds(0.1f);
-    WaitForSeconds delay07 = new WaitForSeconds(0.7f);
 
     private void Start()
     {
         eFieldState = EFieldState.Nothing;
     }
 
+    private void Update()
+    {
+        if (fieldcards.Count < child)
+        {
+            FieldCard fieldcard = field.transform.GetChild(child - 1).transform.GetComponent<FieldCard>();
+            CheckField(fieldcard);
+        }
+    }
+
     public Vector3 SpawnPos()
     {
         Vector3 spawnPos = field.transform.position;
-        spawnPos.y = isMine ? hard_pos[child] : -1 * hard_pos[child];
+        spawnPos.y = hard_pos[child];
         UpdateCollider();
         return spawnPos;
     }
@@ -46,8 +52,8 @@ public class Field : MonoBehaviour
         }
         Vector2 collideroffset = GetComponent<BoxCollider2D>().offset;
         Vector2 collidersize = GetComponent<BoxCollider2D>().size;
-        collideroffset.y = isMine ? hard_offset[child] : -1 * hard_offset[child];
-        collidersize.y = isMine ? hard_size[child] : -1 * hard_size[child];
+        collideroffset.y = hard_offset[child];
+        collidersize.y = hard_size[child];
         GetComponent<BoxCollider2D>().offset = collideroffset;
         GetComponent<BoxCollider2D>().size = collidersize;
     }
@@ -67,8 +73,8 @@ public class Field : MonoBehaviour
 
     public IEnumerator Reordering()
     {
-        //yield return delay01; //AI가 내는 도중이랑 겹쳐서 오류생김; ; 그래서 일단 느리게 설정
-        yield return delay07;
+        yield return Utils.delay(0.1f); //AI가 내는 도중이랑 겹쳐서 오류생김;; 그래서 일단 느리게 설정
+        //yield return Utils.delay(0.7f);
         for (int i = 0; i < child; i++)
         {
             var targetCard = fieldcards[i];

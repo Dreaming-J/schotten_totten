@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -10
-  m_Sprite: {fileID: 21300000, guid: 1382b7e47fb3b024a881c1328453e5bc, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_Size: {x: 6.7, y: 3.6}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &-7750075536691427487
@@ -111,10 +111,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1591758191035955965}
   - component: {fileID: 2217084441857082016}
-  - component: {fileID: 4317804382467304377}
   - component: {fileID: 8355956069919957734}
   m_Layer: 7
-  m_Name: OtherField
+  m_Name: Field 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,32 +184,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &4317804382467304377
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2264396163441723745}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.01089859, y: 5.820761}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.8533335, y: 4.92}
-    newSize: {x: 5.8533335, y: 4.92}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 5.3500195, y: 8.762874}
-  m_EdgeRadius: 0
 --- !u!114 &8355956069919957734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,7 +199,7 @@ MonoBehaviour:
   tile: {fileID: -7750075536691427487}
   field: {fileID: 2264396163441723745}
   fieldcards: []
-  eFieldState: 0
+  eFieldState: 5
   maxNum: 0
 --- !u!1 &8763759608506073710
 GameObject:
@@ -241,7 +214,7 @@ GameObject:
   - component: {fileID: 976012072780348415}
   - component: {fileID: 2819588552194864870}
   m_Layer: 7
-  m_Name: MyField
+  m_Name: Field 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -353,5 +326,5 @@ MonoBehaviour:
   tile: {fileID: -7750075536691427487}
   field: {fileID: 8763759608506073710}
   fieldcards: []
-  eFieldState: 0
+  eFieldState: 5
   maxNum: 0

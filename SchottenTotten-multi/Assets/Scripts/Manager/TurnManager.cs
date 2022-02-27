@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class TurnManager : MonoBehaviour
+public class TurnManager : MonoBehaviourPunCallbacks
 {
     public static TurnManager Inst { get; private set; }
     void Awake() => Inst = this;
 
     [Header("Develop")]
     [SerializeField] [Tooltip("시작 턴 모드를 정합니다.")] ETurnMode eTurnMode;
-    [SerializeField] [Tooltip("카드 배분이 매우 빨라집니다.")] bool fastMode;
     [SerializeField] [Tooltip("시작 카드 개수를 정합니다.")] int startCardCount;
 
     [Header("Properties")]
@@ -19,30 +20,36 @@ public class TurnManager : MonoBehaviour
     public bool myTurn;
 
     enum ETurnMode { Random, My, Other }
-    WaitForSeconds delay05 = new WaitForSeconds(0.5f);
-    WaitForSeconds delay07 = new WaitForSeconds(0.7f);
+    PhotonView PV;
 
     public static Action<bool> OnAddCard;
     public static event Action<bool> OnTurnStarted;
 
+    private void Start()
+    {
+        PV = GetComponent<PhotonView>();
+    }
+
     void GameSetup()
     {
-        if (fastMode)
-            delay05 = new WaitForSeconds(0.05f);
+        GameObject player = PhotonNetwork.Instantiate("Player", new Vector3(0, -12.24678f, 0), Utils.QI, 0);
 
-        switch (eTurnMode)
+        if (PhotonNetwork.IsMasterClient)
         {
-            case ETurnMode.Random:
-                myTurn = Random.Range(0, 2) == 0;
-                break;
-            case ETurnMode.My:
-                myTurn = true;
-                break;
-            case ETurnMode.Other:
-                myTurn = false;
-                break;
+            switch (eTurnMode)
+            {
+                case ETurnMode.Random:
+                    myTurn = Random.Range(0, 2) == 0;
+                    break;
+                case ETurnMode.My:
+                    myTurn = true;
+                    break;
+                case ETurnMode.Other:
+                    myTurn = false;
+                    break;
+            }
+            PV.RPC(nameof(SyncTurn), RpcTarget.Others, myTurn, false);
         }
-
         CardManager.Inst.SetupItemBuffer();
     }
 
@@ -50,13 +57,15 @@ public class TurnManager : MonoBehaviour
     {
         GameSetup();
         isLoading = true;
-
+        yield return Utils.delay(0.5f);
         for (int i = 0; i < startCardCount; i++)
         {
-            yield return delay05;
-            OnAddCard?.Invoke(false);
-            yield return delay05;
-            OnAddCard?.Invoke(true);
+            for (int j = 0; j < PhotonNetwork.PlayerList.Length; j++)
+            {
+                yield return Utils.delay(0.2f);
+                if (Utils.ID == PhotonNetwork.PlayerList[j].UserId)
+                    OnAddCard?.Invoke(true);
+            }
         }
         StartCoroutine(StartTurnCo());
     }
@@ -66,13 +75,10 @@ public class TurnManager : MonoBehaviour
         isLoading = true;
         if (myTurn)
         {
-            yield return delay07;
-            GameManager.Inst.Notification("나의 턴");
+            yield return Utils.delay(0.7f);
+            GameManager.Inst.Notification(PhotonNetwork.LocalPlayer.NickName + " 턴");
         }
-
-        //yield return delay07;
-        //OnAddCard?.Invoke(myTurn);
-        yield return delay07;
+        yield return Utils.delay(0.7f);
         isLoading = false;
 
         OnTurnStarted?.Invoke(myTurn);
@@ -83,7 +89,18 @@ public class TurnManager : MonoBehaviour
         if (myTurn && CardManager.Inst.myPutCount != 1)
             return;
         OnAddCard?.Invoke(myTurn);
-        myTurn = !myTurn;
-        StartCoroutine(StartTurnCo());
+        PV.RPC(nameof(SyncTurn), RpcTarget.All, myTurn, true);
+    }
+
+    [PunRPC] public void SyncTurn(bool myturn, bool startcoroutine)
+    {
+        if (startcoroutine)
+        {
+            myTurn = !myTurn;
+            StartCoroutine(StartTurnCo());
+        }
+        else
+            myTurn = !myturn;
+
     }
 }
