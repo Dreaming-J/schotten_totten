@@ -48,6 +48,10 @@ MonoBehaviour:
   - SetupRPC
   - UpdateSyncRot
   - CheckFieldRPC
+  - ChatRPC
+  - ReadyRPC
+  - test
+  - A
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

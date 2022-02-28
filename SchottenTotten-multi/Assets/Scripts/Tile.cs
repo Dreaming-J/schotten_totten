@@ -10,7 +10,6 @@ public class Tile : MonoBehaviour
     [SerializeField] public ETileState eTileState;
 
     public enum ETileState { Mine, Yours, Nothing };
-    WaitForSeconds delay05 = new WaitForSeconds(0.5f);
 
     private void Start()
     {
@@ -44,7 +43,7 @@ public class Tile : MonoBehaviour
 
     public IEnumerator SetTileWinner()
     {
-        yield return delay05;
+        yield return Utils.delay(0.5f);
         if (eTileState == ETileState.Mine)
         {
             tile.GetComponent<SpriteRenderer>().color = new Color32(56, 56, 56, 255);

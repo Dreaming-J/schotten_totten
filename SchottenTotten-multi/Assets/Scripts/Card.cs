@@ -24,7 +24,6 @@ public class Card : MonoBehaviour
 
     private void Start()
     {
-        PV = GetComponent<PhotonView>();
         isFront = PV.IsMine;
     }
 

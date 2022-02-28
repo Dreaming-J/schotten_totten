@@ -17,11 +17,6 @@ public class FieldCard : MonoBehaviour
     public Item item;
     public PhotonView PV;
 
-    private void Start()
-    {
-        PV = GetComponent<PhotonView>();
-    }
-
     public void Setup(Item item, int tilenum)
     {
         string jdata = JsonUtility.ToJson(item);

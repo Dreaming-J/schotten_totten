@@ -18,6 +18,7 @@ public class TileManager : MonoBehaviour
     [SerializeField] GameObject tile;
 
     public List<GameObject> tiles;
+    public bool isGameOver = false;
 
     void CreateTile()
     {
@@ -64,11 +65,10 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    public IEnumerator CheckGameStatus() //¼öÁ¤ Áß
+    public IEnumerator CheckGameStatus()
     {
         int mine = 0;
         int yours = 0;
-        bool isGameOver = false;
         bool isMyWin = false;
 
         for (int i = 0; i < tiles.Count; i++)
@@ -95,7 +95,6 @@ public class TileManager : MonoBehaviour
         }
         if (mine + yours == tiles.Count)
         {
-            Debug.Log(mine + ", " + yours + ", " + tiles.Count);
             if (mine > yours)
                 isMyWin = true;
             if (mine < yours)

@@ -18,24 +18,18 @@ public class TurnManager : MonoBehaviourPunCallbacks
     [Header("Properties")]
     public bool isLoading;
     public bool myTurn;
+    [SerializeField] PhotonView PV;
 
     enum ETurnMode { Random, My, Other }
-    PhotonView PV;
 
     public static Action<bool> OnAddCard;
     public static event Action<bool> OnTurnStarted;
 
-    private void Start()
-    {
-        PV = GetComponent<PhotonView>();
-    }
-
     void GameSetup()
     {
-        GameObject player = PhotonNetwork.Instantiate("Player", new Vector3(0, -12.24678f, 0), Utils.QI, 0);
-
-        if (PhotonNetwork.IsMasterClient)
+        if (Utils.isMaster)
         {
+            CardManager.Inst.SetupItemBuffer();
             switch (eTurnMode)
             {
                 case ETurnMode.Random:
@@ -50,7 +44,6 @@ public class TurnManager : MonoBehaviourPunCallbacks
             }
             PV.RPC(nameof(SyncTurn), RpcTarget.Others, myTurn, false);
         }
-        CardManager.Inst.SetupItemBuffer();
     }
 
     public IEnumerator StartGameCo()
@@ -62,7 +55,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
         {
             for (int j = 0; j < PhotonNetwork.PlayerList.Length; j++)
             {
-                yield return Utils.delay(0.2f);
+                yield return Utils.delay(0.5f);
                 if (Utils.ID == PhotonNetwork.PlayerList[j].UserId)
                     OnAddCard?.Invoke(true);
             }
@@ -76,9 +69,9 @@ public class TurnManager : MonoBehaviourPunCallbacks
         if (myTurn)
         {
             yield return Utils.delay(0.7f);
-            GameManager.Inst.Notification(PhotonNetwork.LocalPlayer.NickName + " ÅÏ");
+            GameManager.Inst.Notification(PhotonNetwork.LocalPlayer.NickName + "´Ô Â÷·Ê");
         }
-        yield return Utils.delay(0.7f);
+        yield return Utils.delay(0.5f);
         isLoading = false;
 
         OnTurnStarted?.Invoke(myTurn);

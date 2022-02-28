@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 public class ResultPanel : MonoBehaviour
 {
@@ -15,8 +16,9 @@ public class ResultPanel : MonoBehaviour
         transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InOutQuad);
     }
 
-    public void Restart()
+    public void Btn_Restart()
     {
+        PhotonNetwork.Disconnect();
         SceneManager.LoadScene(0);
     }
 

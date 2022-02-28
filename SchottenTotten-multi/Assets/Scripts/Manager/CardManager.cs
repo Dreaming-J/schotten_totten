@@ -7,7 +7,7 @@ using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class CardManager : MonoBehaviourPunCallbacks, IPunObservable
+public class CardManager : MonoBehaviourPunCallbacks
 {
     public static CardManager Inst { get; private set; }
     void Awake() => Inst = this;
@@ -20,8 +20,8 @@ public class CardManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] Transform myCardLeft;
     [SerializeField] Transform myCardRight;
     [SerializeField] ECardState eCardState;
+    [SerializeField] PhotonView PV;
 
-    PhotonView PV;
     public List<Item> itemBuffer = new List<Item>(54);
     Card selectCard;
     Field targetField;
@@ -29,24 +29,6 @@ public class CardManager : MonoBehaviourPunCallbacks, IPunObservable
     bool onMyCardArea;
     enum ECardState { Nothing, CanMouseOver, CanMouseDrag }
     public int myPutCount;
-
-    #region µø±‚»≠ IPunObservable implementation
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting && Utils.isMaster)
-        {
-            //We own this player: send the others our data
-            //string jdata = JsonUtility.ToJson(new Serialization<Item>(itemBuffer));
-            //stream.SendNext(jdata);
-        }
-        else
-        {
-            //Network player, receive data
-            //string jdata = (string)stream.ReceiveNext();
-            //itemBuffer = JsonUtility.FromJson<Serialization<Item>>(jdata).target;
-        }
-    }
-    #endregion
 
     public Item PopItem()
     {
@@ -61,23 +43,20 @@ public class CardManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void SetupItemBuffer()
     {
-        if (Utils.isMaster)
+        for (int i = 0; i < itemSO.items.Length; i++)
         {
-            for (int i = 0; i < itemSO.items.Length; i++)
-            {
             Item item = itemSO.items[i];
             itemBuffer.Add(item);
-            }
-            for (int i = 0; i < itemBuffer.Count; i++)
-            {
-                int rand = Random.Range(i, itemBuffer.Count);
-                Item temp = itemBuffer[i];
-                itemBuffer[i] = itemBuffer[rand];
-                itemBuffer[rand] = temp;
-            }
-            string jdata = JsonUtility.ToJson(new Serialization<Item>(itemBuffer));
-            PV.RPC(nameof(UpdateItemBuffer), RpcTarget.OthersBuffered, jdata);
         }
+        for (int i = 0; i < itemBuffer.Count; i++)
+        {
+            int rand = Random.Range(i, itemBuffer.Count);
+            Item temp = itemBuffer[i];
+            itemBuffer[i] = itemBuffer[rand];
+            itemBuffer[rand] = temp;
+        }
+        string jdata = JsonUtility.ToJson(new Serialization<Item>(itemBuffer));
+        PV.RPC(nameof(UpdateItemBuffer), RpcTarget.OthersBuffered, jdata);
     }
     [PunRPC] void UpdateItemBuffer(string jdata)
     {
@@ -98,7 +77,6 @@ public class CardManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void Start()
     {
-        PV = GetComponent<PhotonView>();
         TurnManager.OnAddCard += AddCard;
         TurnManager.OnTurnStarted += OnTurnStarted;
     }
