@@ -25,6 +25,14 @@ public class GameManager : MonoBehaviour
         StartGame(); // NetworkManager_TMP로 사용시 주석처리
     }
 
+    void Update()
+    {
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        {
+            LoadingSceneManager.LoadScene("LobbyScene", "상대방의 종료로 인해 로비화면으로 돌아갑니다.");
+        }
+    }
+
     void UISetup()
     {
         notificationPanel.ScaleZero();

@@ -245,8 +245,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 yield break;
             }
         }
-        //로딩 창 띄우고 싶음
-        SceneManager.LoadScene(1);
+        LoadingSceneManager.LoadScene("GameScene", "게임이 시작됩니다.");
     }
     #endregion
 

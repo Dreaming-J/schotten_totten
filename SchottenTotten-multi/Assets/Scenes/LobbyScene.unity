@@ -6473,7 +6473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a536b035364ddd240a02d92059801886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isFull: 1
+  isFull: 0
   waitingtime: 5
   LoginPanel: {fileID: 832348745}
   NickNameInput: {fileID: 1003423285}
@@ -6507,7 +6507,6 @@ MonoBehaviour:
   - {fileID: 194228663}
   ChatInput: {fileID: 1355247259}
   PV: {fileID: 2115696960}
-  StatusText: {fileID: 436755650}
 --- !u!4 &2115696959
 Transform:
   m_ObjectHideFlags: 0

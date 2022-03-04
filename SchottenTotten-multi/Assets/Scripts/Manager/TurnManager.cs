@@ -69,12 +69,16 @@ public class TurnManager : MonoBehaviourPunCallbacks
         if (myTurn)
         {
             yield return Utils.delay(0.7f);
-            GameManager.Inst.Notification(PhotonNetwork.LocalPlayer.NickName + "´Ô Â÷·Ê");
+            PV.RPC(nameof(NotificationRPC), RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + "ÀÇ ÅÏ");
         }
         yield return Utils.delay(0.5f);
         isLoading = false;
 
         OnTurnStarted?.Invoke(myTurn);
+    }
+    [PunRPC] void NotificationRPC(string message)
+    {
+        GameManager.Inst.Notification(message);
     }
 
     public void EndTurn()
