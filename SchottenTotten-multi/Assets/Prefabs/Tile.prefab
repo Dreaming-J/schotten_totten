@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1220596165535333247}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.85, y: 0.14, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children:
   - {fileID: 3193134977670974224}
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 6.7, y: 3.6}
+  m_Size: {x: 4.8, y: 4.68}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -101,6 +101,7 @@ MonoBehaviour:
   myField: {fileID: 8763759608506073710}
   otherField: {fileID: 2264396163441723745}
   eTileState: 0
+  eWhosFirst: 0
 --- !u!1 &2264396163441723745
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,7 +111,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1591758191035955965}
-  - component: {fileID: 2217084441857082016}
+  - component: {fileID: 1692398910735158893}
   - component: {fileID: 8355956069919957734}
   m_Layer: 7
   m_Name: Field 1
@@ -133,7 +134,7 @@ Transform:
   m_Father: {fileID: 5293261204879198196}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &2217084441857082016
+--- !u!212 &1692398910735158893
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -170,9 +171,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 225929213
-  m_SortingLayer: 1
-  m_SortingOrder: 100
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 9a667bd7cdc823c419aa6d1ba8ab0402, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -210,7 +211,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3193134977670974224}
-  - component: {fileID: 6823076207835662359}
+  - component: {fileID: 497074456419762668}
   - component: {fileID: 976012072780348415}
   - component: {fileID: 2819588552194864870}
   m_Layer: 7
@@ -234,7 +235,7 @@ Transform:
   m_Father: {fileID: 5293261204879198196}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &6823076207835662359
+--- !u!212 &497074456419762668
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -271,9 +272,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 225929213
-  m_SortingLayer: 1
-  m_SortingOrder: 100
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 615bc9d91fc1a534cae5fc12465751b2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

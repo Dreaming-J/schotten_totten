@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 
@@ -34,6 +35,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public InputField ChatInput;
 
     [Header("ETC")]
+    public ThrobberPanel throbberPanel;
     public PhotonView PV;
 
     List<RoomInfo> myList = new List<RoomInfo>();
@@ -63,12 +65,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (isEnteredRoom) RoomRenewal();
     }
 
-    public void Btn_Connect() => PhotonNetwork.ConnectUsingSettings();
+    public void Btn_Connect()
+    {
+        throbberPanel.Show(true);
+        PhotonNetwork.ConnectUsingSettings();
+    }
 
     public override void OnConnectedToMaster() => PhotonNetwork.JoinLobby();
 
     public override void OnJoinedLobby()
     {
+        throbberPanel.Show(false);
         LobbyPanel.SetActive(true);
         RoomPanel.SetActive(false);
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
@@ -94,7 +101,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         if (num == -2) --currentPage;
         else if (num == -1) ++currentPage;
-        else PhotonNetwork.JoinRoom(myList[multiple + num].Name);
+        else
+        {
+            throbberPanel.Show(true);
+            PhotonNetwork.JoinRoom(myList[multiple + num].Name);
+        }
         MyListRenewal();
     }
 
@@ -139,9 +150,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 
     #region 방
-    public void Btn_CreateRoom() => PhotonNetwork.CreateRoom(RoomInput.text == "" ? "Room" + Random.Range(0, 10) : RoomInput.text, new RoomOptions { MaxPlayers = 2, PublishUserId = true });
+    public void Btn_CreateRoom()
+    {
+        throbberPanel.Show(true);
+        PhotonNetwork.CreateRoom(RoomInput.text == "" ? "Room" + Random.Range(0, 10) : RoomInput.text, new RoomOptions { MaxPlayers = 2, PublishUserId = true });
+    }
 
-    public void Btn_JoinRandomRoom() => PhotonNetwork.JoinRandomRoom();
+    public void Btn_JoinRandomRoom()
+    {
+        throbberPanel.Show(true);
+        PhotonNetwork.JoinRandomRoom();
+    }
 
     public void Btn_LeaveRoom()
     {
@@ -153,7 +172,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        ReadyBtn.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "준비";
+        throbberPanel.Show(false);
+        ReadyBtn.transform.GetChild(0).GetComponent<TMP_Text>().text = "준비";
         RoomPanel.SetActive(true);
         isEnteredRoom = true;
         ChatInput.text = "";
@@ -222,7 +242,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void Btn_Ready()
     {
         isMeReady = !isMeReady;
-        ReadyBtn.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = isMeReady ? "취소" : "준비";
+        ReadyBtn.transform.GetChild(0).GetComponent<TMP_Text>().text = isMeReady ? "취소" : "준비";
         PV.RPC("ReadyRPC", RpcTarget.OthersBuffered, isMeReady);
     }
 

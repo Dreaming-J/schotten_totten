@@ -8,18 +8,24 @@ public class Tile : MonoBehaviour
     [SerializeField] GameObject myField;
     [SerializeField] GameObject otherField;
     [SerializeField] public ETileState eTileState;
+    [SerializeField] EWhosFirst eWhosFirst;
 
     public enum ETileState { Mine, Yours, Nothing };
+    public enum EWhosFirst { Mine, Yours, Nothing };
 
     private void Start()
     {
         eTileState = ETileState.Nothing;
+        eWhosFirst = EWhosFirst.Nothing;
     }
 
-    public void CheckTile()
+    public void CheckTile(string fieldname)
     {
         Field myfield = myField.GetComponent<Field>();
         Field otherfield = otherField.GetComponent<Field>();
+        if (eWhosFirst == EWhosFirst.Nothing)
+            eWhosFirst = fieldname == "Field 0" ? EWhosFirst.Mine : EWhosFirst.Yours;
+
         if (myfield.eFieldState == Field.EFieldState.Nothing || otherfield.eFieldState == Field.EFieldState.Nothing)
             return;
 
@@ -33,9 +39,15 @@ public class Tile : MonoBehaviour
         {
             if (myfield.maxNum > otherfield.maxNum)
                 eTileState = ETileState.Mine;
-
             else if (myfield.maxNum < otherfield.maxNum)
                 eTileState = ETileState.Yours;
+            else if (myfield.maxNum == otherfield.maxNum)
+            {
+                if (eWhosFirst == EWhosFirst.Mine)
+                    eTileState = ETileState.Mine;
+                else if (eWhosFirst == EWhosFirst.Yours)
+                    eTileState = ETileState.Yours;
+            }
         }
         StartCoroutine(SetTileWinner());
         StartCoroutine(TileManager.Inst.CheckGameStatus());

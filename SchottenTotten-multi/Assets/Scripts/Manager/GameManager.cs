@@ -27,8 +27,9 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1 && !TileManager.Inst.isGameOver)
         {
+            PhotonNetwork.Disconnect();
             LoadingSceneManager.LoadScene("LobbyScene", "상대방의 종료로 인해 로비화면으로 돌아갑니다.");
         }
     }

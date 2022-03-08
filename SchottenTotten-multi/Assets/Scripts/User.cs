@@ -9,6 +9,7 @@ public class User : MonoBehaviour
     [SerializeField] SpriteRenderer characterimg;
     [SerializeField] List<Sprite> sprites;
     [SerializeField] PhotonView PV;
+
     int id2mine => PV.IsMine ? 0 : 1;
 
     private void Start()

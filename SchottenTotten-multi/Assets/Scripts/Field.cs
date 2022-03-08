@@ -68,13 +68,12 @@ public class Field : MonoBehaviour
         maxNum = fieldcards[2].item.number;
         StartCoroutine(Reordering());
         SetCombination();
-        tile.CheckTile();
+        tile.CheckTile(transform.name.ToString());
     }
 
     public IEnumerator Reordering()
     {
-        yield return Utils.delay(0.1f); //AI가 내는 도중이랑 겹쳐서 오류생김;; 그래서 일단 느리게 설정
-        //yield return Utils.delay(0.7f);
+        yield return Utils.delay(0.1f);
         for (int i = 0; i < child; i++)
         {
             var targetCard = fieldcards[i];

@@ -34,25 +34,18 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - ChatRPC
   - ClickRpc
   - DestroyRpc
   - DestroySpaceship
   - Fire
+  - NotificationRPC
+  - ReadyRPC
   - RespawnSpaceship
-  - SyncItemList
-  - UpdateItemBuffer
-  - Syncrand
+  - SetupRPC
   - SyncPop
   - SyncTurn
-  - HandSetting
-  - SetupRPC
-  - UpdateSyncRot
-  - CheckFieldRPC
-  - ChatRPC
-  - ReadyRPC
-  - test
-  - A
-  - NotificationRPC
+  - UpdateItemBuffer
   DisableAutoOpenWizard: 1
-  ShowSettings: 1
+  ShowSettings: 0
   DevRegionSetOnce: 1
