@@ -30,7 +30,7 @@ public class FieldCard : MonoBehaviour
         int num = (item.number - 1) * 6;
         for (int j = 0; j < 6; j++)
         {
-            if (item.colorname == CardManager.Inst.itemSO.items[num + j].colorname)
+            if (item.colornum == CardManager.Inst.itemSO.items[num + j].colornum)
             {
                 item.sprite = CardManager.Inst.itemSO.items[num + j].sprite;
                 break;

@@ -29,6 +29,10 @@ public class Card : MonoBehaviour
 
     public void Setup(Item item)
     {
+        //통신 지연이 있어 이부분만 미리 처리
+        this.item.number = item.number;
+        this.item.colornum = item.colornum;
+
         string jdata = JsonUtility.ToJson(item);
         PV.RPC(nameof(SetupRPC), RpcTarget.AllBufferedViaServer, jdata);
     }

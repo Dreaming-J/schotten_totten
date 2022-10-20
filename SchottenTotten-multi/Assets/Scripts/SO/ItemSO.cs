@@ -7,7 +7,7 @@ public class Item
 {
     public int number;
     public Sprite sprite;
-    public string colorname;
+    public int colornum;
     public Color color;
 }
 

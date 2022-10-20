@@ -20,7 +20,9 @@ public class CardManager : MonoBehaviourPunCallbacks
     [SerializeField] Transform myCardLeft;
     [SerializeField] Transform myCardRight;
     [SerializeField] ECardState eCardState;
+    public ESortState esortState;
     [SerializeField] PhotonView PV;
+
 
     public List<Item> itemBuffer = new List<Item>(54);
     Card selectCard;
@@ -28,6 +30,7 @@ public class CardManager : MonoBehaviourPunCallbacks
     bool isMyCardDrag;
     bool onMyCardArea;
     enum ECardState { Nothing, CanMouseOver, CanMouseDrag }
+    public enum ESortState { ColorNum, NumColor }
     public int myPutCount;
 
     public Item PopItem()
@@ -66,7 +69,7 @@ public class CardManager : MonoBehaviourPunCallbacks
             int num = (itemBuffer[i].number - 1) * 6;
             for (int j = 0; j < 6; j++)
             {
-                if (itemBuffer[i].colorname == itemSO.items[num + j].colorname)
+                if (itemBuffer[i].colornum == itemSO.items[num + j].colornum)
                 {
                     itemBuffer[i].sprite = itemSO.items[num + j].sprite;
                     break;
@@ -111,6 +114,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         card.transform.parent = myHand.transform;
         myCards.Add(card);
         card.Setup(PopItem());
+        myCards.Sort(Utils.CompareCard); //Card.cs의 Setup함수에서 RPC 통신 지연에 따른 보상 처리
 
         SetOriginOrder(isMine);
         CardAlignment(isMine);
@@ -122,7 +126,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         for (int i = 0; i < count; i++)
         {
             var targetCard = myCards[i];
-            targetCard?.GetComponent<Order>().SetOriginOrder(i);
+            targetCard?.GetComponent<Order>().SetOriginOrder(i, true);
         }
     }
 
@@ -206,7 +210,7 @@ public class CardManager : MonoBehaviourPunCallbacks
 
 
 
-    #region MyCard
+    #region 카드 움직임
 
     public void CardMouseOver(Card card)
     {

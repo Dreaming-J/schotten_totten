@@ -90,11 +90,11 @@ public class Field : MonoBehaviour
         bool isTriple = false;
         bool isFlush = false;
         bool isStraight = false;
-        string[] colors = new string[3];
+        int[] colors = new int[3];
         int[] numbers = new int[3];
         for (int i = 0; i < fieldcards.Count; i++)
         {
-            colors[i] = fieldcards[i].item.colorname;
+            colors[i] = fieldcards[i].item.colornum;
             numbers[i] = fieldcards[i].item.number;
         }
 

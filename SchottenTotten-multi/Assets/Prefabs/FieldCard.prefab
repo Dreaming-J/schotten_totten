@@ -113,7 +113,7 @@ MonoBehaviour:
   item:
     number: 0
     sprite: {fileID: 0}
-    colorname: 
+    colornum: 0
     color: {r: 0, g: 0, b: 0, a: 0}
   PV: {fileID: -5598635538674176575}
 --- !u!114 &136148441004481313
@@ -137,6 +137,7 @@ MonoBehaviour:
   - {fileID: 3799033576325319158}
   - {fileID: 1156778690321550114}
   sortingLayerName: Field
+  PV: {fileID: 0}
 --- !u!61 &5785741283376661149
 BoxCollider2D:
   m_ObjectHideFlags: 0

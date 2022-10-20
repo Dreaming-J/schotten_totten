@@ -36,6 +36,40 @@ public class Utils
             return result;
         }
     }
+
+    public static int CompareCard(Card card1, Card card2)
+    {
+        if (CardManager.Inst.esortState == CardManager.ESortState.ColorNum)
+        {
+            if (card1.item.colornum < card2.item.colornum)
+                return -1;
+            else if (card1.item.colornum == card2.item.colornum)
+            {
+                if (card1.item.number < card2.item.number)
+                    return -1;
+                else if (card1.item.number > card2.item.number)
+                    return 1;
+            }
+            else if (card1.item.colornum > card2.item.colornum)
+                return 1;
+        }
+        else if (CardManager.Inst.esortState == CardManager.ESortState.NumColor)
+        {
+            if (card1.item.number < card2.item.number)
+                return -1;
+            else if (card1.item.number == card2.item.number)
+            {
+                if (card1.item.colornum < card2.item.colornum)
+                    return -1;
+                else if (card1.item.colornum > card2.item.colornum)
+                    return 1;
+            }
+            else if (card1.item.number > card2.item.number)
+                return 1;
+        }
+
+        return 0;
+    }
 }
 
 [System.Serializable]

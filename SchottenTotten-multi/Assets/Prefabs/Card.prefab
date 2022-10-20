@@ -115,7 +115,7 @@ MonoBehaviour:
   item:
     number: 0
     sprite: {fileID: 0}
-    colorname: 
+    colornum: 0
     color: {r: 0, g: 0, b: 0, a: 0}
   isField: 0
   originPRS:
@@ -144,6 +144,7 @@ MonoBehaviour:
   - {fileID: 3799033576325319158}
   - {fileID: 1156778690321550114}
   sortingLayerName: Card
+  PV: {fileID: -3875831317572214389}
 --- !u!60 &181240926539713751
 PolygonCollider2D:
   m_ObjectHideFlags: 0

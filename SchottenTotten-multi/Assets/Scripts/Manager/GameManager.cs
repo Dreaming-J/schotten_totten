@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        GameObject player = PhotonNetwork.Instantiate("User", new Vector3(0, -12.24678f, 0), Utils.QI, 0);
+        PhotonNetwork.Instantiate("User", new Vector3(0, -12.24678f, 0), Utils.QI, 0);
         StartCoroutine(TileManager.Inst.SetTile());
         StartCoroutine(TurnManager.Inst.StartGameCo());
     }

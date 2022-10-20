@@ -153,7 +153,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void Btn_CreateRoom()
     {
         throbberPanel.Show(true);
-        PhotonNetwork.CreateRoom(RoomInput.text == "" ? "Room" + Random.Range(0, 10) : RoomInput.text, new RoomOptions { MaxPlayers = 2, PublishUserId = true });
+        PhotonNetwork.CreateRoom(RoomInput.text == "" ? PhotonNetwork.LocalPlayer.NickName + "¥‘¿« πÊ" : RoomInput.text, new RoomOptions { MaxPlayers = 2, PublishUserId = true });
     }
 
     public void Btn_JoinRandomRoom()

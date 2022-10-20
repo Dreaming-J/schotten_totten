@@ -46,6 +46,8 @@ MonoBehaviour:
   - SyncPop
   - SyncTurn
   - UpdateItemBuffer
+  - SetOriginOrder
+  - SetOriginOrderRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
