@@ -1,3 +1,3 @@
 # schotten_totten
  
-유니티로 만든 쇼텐토텐 보드게임 이식작.
+쇼텐토텐 보드게임 모작 by Unity
